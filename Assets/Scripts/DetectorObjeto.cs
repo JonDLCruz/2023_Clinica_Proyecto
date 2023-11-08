@@ -8,7 +8,7 @@ using UnityEngine.Video;
 
 public class DetectorObjeto : MonoBehaviour
 {
-    [SerializeField] GameObject instanciaPadre;
+    [SerializeField] GameObject instanciaPadre; //donde colocaremos los menus para que se vean en pantalla 
     private GameObject textoInstanciado; //el objeto instanciado
     [SerializeField] private TextMeshProUGUI titulo;
     [SerializeField] private TextMeshProUGUI descripcion;
@@ -17,7 +17,7 @@ public class DetectorObjeto : MonoBehaviour
     private string nombreObjeto; //donde pondremos luego el nombre del objeto que señalamos con el raton
     LayerMask mask; //la mascara para detectar 
     private float distancia = 3f; //ya cambiaremos esto
-    public GameObject texDectect;
+    public GameObject texDectect; //donde colocaremos F en el chat
     GameObject ultimoReconocido = null;
     GameObject fenChat;
     private new Transform camera;
@@ -27,8 +27,8 @@ public class DetectorObjeto : MonoBehaviour
     void Start()
     {
         mask = LayerMask.GetMask("DetecObject"); //he llamado a la mascara que detectara si es un objeto asi.
-        fenChat = Instantiate(texDectect, instanciaPadre.transform);
-        rigidbody = GetComponent<Rigidbody>();
+        fenChat = Instantiate(texDectect, instanciaPadre.transform); //instanciamos F en el chat para que se encienda y se apage
+        rigidbody = GetComponent<Rigidbody>(); 
         camera = transform.Find("Main Camera");
         fenChat.SetActive(false);
 
@@ -143,18 +143,18 @@ public class DetectorObjeto : MonoBehaviour
     void InfoObjeto(string nombreObjeto)
     {
         //aqui va la ruta a la base de datos de los objetos 
-        string textFilePath = null; //sustituir null por ruta
-        string videoFilePath = null; //sustituir null por ruta
+        string textFilePath = "2023_Clinica_Proyecto/Assets/Resources/dataB"; //sustituir null por ruta
+        //string videoFilePath = "Assets/Resources/Videos"; //sustituir null por ruta
 
-        if (File.Exists(textFilePath) && File.Exists(videoFilePath))
+        if (File.Exists(textFilePath) ) //&& File.Exists(videoFilePath)
         {
             //carga la descrcion del archivo de la base de datos
             string a = File.ReadAllText(textFilePath); //lee todo el contenido dentro de la base de datos del objeto
             descripcion.text = a;
 
             //carga el video
-            video.url = videoFilePath;
-            video.Play();
+            //video.url = videoFilePath;
+            //video.Play();
         }
         else
         {
