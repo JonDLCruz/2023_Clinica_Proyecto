@@ -4,5 +4,7 @@ using UnityEngine;
 
 public class OBJList : MonoBehaviour
 {
-    public List<string> listaOBJ;
+    [SerializeField]
+    public List<InteractableObj> listaOBJ = new List<InteractableObj>();
+    
 }
