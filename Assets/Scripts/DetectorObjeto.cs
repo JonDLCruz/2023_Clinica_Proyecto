@@ -8,33 +8,38 @@ using UnityEngine.Video;
 
 public class DetectorObjeto : MonoBehaviour
 {
+    [SerializeField] GameObject instanciaPadre;
     private GameObject textoInstanciado; //el objeto instanciado
     [SerializeField] private TextMeshProUGUI titulo;
     [SerializeField] private TextMeshProUGUI descripcion;
     [SerializeField] private VideoPlayer video;
     [SerializeField] private GameObject menu;
-    public string detectorRaton; //esto luego se puede camiar por el puntero de la camara 
     private string nombreObjeto; //donde pondremos luego el nombre del objeto que señalamos con el raton
     LayerMask mask; //la mascara para detectar 
-    private float distancia = 1500000000f; //ya cambiaremos esto
-    [SerializeField] private GameObject texDectect;
+    private float distancia = 3f; //ya cambiaremos esto
+    public GameObject texDectect;
     GameObject ultimoReconocido = null;
+    GameObject fenChat;
+    private new Transform camera;
+    private new Rigidbody rigidbody;
 
     // Start is called before the first frame update
     void Start()
     {
         mask = LayerMask.GetMask("DetecObject"); //he llamado a la mascara que detectara si es un objeto asi.
-        menu.SetActive(false);
-        texDectect.SetActive(false);
-
+        fenChat = Instantiate(texDectect, instanciaPadre.transform);
+        rigidbody = GetComponent<Rigidbody>();
+        camera = transform.Find("Main Camera");
+        fenChat.SetActive(false);
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        //Lanza un rayo desde la posicion del raton
 
+        //Lanza un rayo desde la posicion del raton
+        Debug.DrawRay(camera.position, camera.forward * distancia, Color.red);
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); //para mi prueba usaremos el raton lo quito por que no me funciona con la camara principal
         RaycastHit hit;
 
@@ -92,17 +97,33 @@ public class DetectorObjeto : MonoBehaviour
     {
         if (ultimoReconocido)
         {
-            texDectect.SetActive(true);
+            if (fenChat != null)
+            {
+                fenChat.SetActive(true);
+            }
+            else
+            {
+                Debug.LogWarning("El objeto fenChat no ha sido inicializado correctamente.");
+                fenChat.SetActive(false);
+            }
+
         }
         else
         {
-            texDectect.SetActive(false);
+            if (fenChat != null)
+            {
+                fenChat.SetActive(false);
+            }
+            else
+            {
+                Debug.LogWarning("El objeto fenChat no ha sido inicializado correctamente.");
+            }
         }
     }
 
     void AbrirMenuFlotante()
     {
-        textoInstanciado = Instantiate(menu); //instanciamos el texto flotante
+        textoInstanciado = Instantiate(menu, instanciaPadre.transform); //instanciamos el texto flotante
         titulo = GameObject.Find("Titulo").GetComponent<TextMeshProUGUI>(); //instanciamos el titulo
         descripcion = GameObject.Find("Descripcion").GetComponent<TextMeshProUGUI>(); //Instanciamos Descripcion
         video = GameObject.Find("Video Player").GetComponent<VideoPlayer>(); //se supone que aqui va el video
