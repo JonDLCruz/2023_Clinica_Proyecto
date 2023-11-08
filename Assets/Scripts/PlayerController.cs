@@ -8,7 +8,6 @@ using UnityEngine.UIElements;
 public class PlayerController : MonoBehaviour
 {
     public Vector2 sensibility;
-
     public new Transform camera;
     public GameObject _actividades, _panelSubtitles, _panelActividades;
     public TextMeshProUGUI _subtitles;
@@ -37,7 +36,9 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         RaycastNPC();
+        if (canMove)
         Movmetcharacter();
+        if (canMoveCamera)
         CameraControl();
         if(isTalking)
         {
@@ -87,6 +88,7 @@ public class PlayerController : MonoBehaviour
         rigidbody.velocity = velocity;
     }
 
+    
     public void RaycastNPC()
     {
         Debug.DrawRay(camera.position, camera.forward * rayDistance, Color.red);
@@ -100,11 +102,12 @@ public class PlayerController : MonoBehaviour
             {
                 print("Detecatado");
                     StartDialog(hit.collider.gameObject.GetComponent<NPCText>());
+                
             }
         }
         ;
     }
-
+    
     void StartDialog(NPCText _npc)
     {
         print("Entro");
@@ -123,17 +126,18 @@ public class PlayerController : MonoBehaviour
     void HandleDialog()
     {
         dialogueTimer += Time.deltaTime;
-        if (dialogueTimer >= 3) {
+        if (dialogueTimer >= 5) {
 
             dialogueTimer = 0f;
             currentIndex++;
-            if (currentIndex <= dialogueText.Length)
+            if (currentIndex < dialogueText.Length)
             {
                 _subtitles.text = dialogueText[currentIndex];
+                _panelActividades.SetActive(true);
             }
             else
             {
-                EndDialogue();
+                    EndDialogue();
             }
         }
     }
@@ -143,8 +147,14 @@ public class PlayerController : MonoBehaviour
         canMove = true;
         canMoveCamera = true;
         UnityEngine.Cursor.lockState = CursorLockMode.Locked;
+        _panelActividades.SetActive(false);
         _panelSubtitles.SetActive(false);
         _actividades.SetActive(false);
         dialogueText = null;
+    }
+
+    void ObjetosInteractuar(string _nombreObjeto)
+    {
+
     }
 }
