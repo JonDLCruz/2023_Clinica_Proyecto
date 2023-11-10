@@ -2,7 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem.HID;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 
@@ -25,15 +27,23 @@ public class PlayerController : MonoBehaviour
     private float dialogueTimer = 0f;
     //Rayos
     public float rayDistance;
+    GameObject objInteract;
     //Listas
     List<InteractableObj> lista = new List<InteractableObj>();
-    //Crear un GameObject para referencia el objeto interactable private GameObject ObjInteractable;
+    //interactable obj
+    string nameDB = "", descr = "", path = "";
+    //Mano
+    [SerializeField]
+    private GameObject _mano;
+    private bool isGrabing;
 
     // Start is called before the first frame update
     void Start()
     {
         //Set del rigidBody
         rigidbody = GetComponent<Rigidbody>();
+        //Set Mano
+        _mano = GameObject.Find("Mano");
         //Cursor settings
         UnityEngine.Cursor.lockState = CursorLockMode.Locked;
         //Ocultamos Menu
@@ -43,8 +53,9 @@ public class PlayerController : MonoBehaviour
         //Permitimos Movimiento
         canMove = true;
         canMoveCamera = true;
-       //Prueba para interactuar con objetos
-        ObjetosInteractuar("Cuchara");
+        //Prueba para interactuar con objetos
+        ObjetosInteractuar("Carpeta de Historia clínica");
+        isGrabing = false;
     }
 
     // Update is called once per frame
@@ -52,14 +63,22 @@ public class PlayerController : MonoBehaviour
     {
         //Rayo que utilizamos para detectar NPCS y hablar con ellos
         RaycastNPC();
+        if (!isGrabing)
+        {
+            RaycastObjectInteract();
+        }
+        else
+        {
+            StopGrabing(objInteract);
+        }
         //Controlador para poder moverse o no
         if (canMove)
-        Movmetcharacter();
+            Movmetcharacter();
         //Lo mismo que el de moverse pero para camara
         if (canMoveCamera)
-        CameraControl();
+            CameraControl();
         //Condicion generada para poder hablar y desahabilitar las funciones anteriores
-        if(isTalking)
+        if (isTalking)
         {
             HandleDialog();
         }
@@ -112,7 +131,7 @@ public class PlayerController : MonoBehaviour
         rigidbody.velocity = velocity;
     }
 
-    
+
     public void RaycastNPC()
     {
         //Dibujamos el rayo para verlo en play
@@ -126,13 +145,72 @@ public class PlayerController : MonoBehaviour
             if (hit.collider.tag == "NPC" && Input.GetMouseButton(0) && !isTalking)//Condicion para activar el npc
             {
                 print("Detecatado");
-                    StartDialog(hit.collider.gameObject.GetComponent<NPCText>());//Le pasamos a la funcion el NPCText del NPC por ahora ser un dialogo
-                
+                StartDialog(hit.collider.gameObject.GetComponent<NPCText>());//Le pasamos a la funcion el NPCText del NPC por ahora ser un dialogo
+
             }
         }
         ;
     }
-    
+
+    public void RaycastObjectInteract()
+    {
+        //Dibujamos el rayo para verlo en play
+        Debug.DrawRay(camera.position, camera.forward * rayDistance, Color.blue);
+        //Creamos el hit donde sacaremos toda la insformación
+        RaycastHit hit;
+
+        if (Physics.Raycast(camera.position, camera.forward, out hit, rayDistance, LayerMask.GetMask("OBJ_Checker")))//casteamos el rayo desde camara y comprobamos los objetos en la mascara NPC_Checker
+        {
+
+            if (hit.collider.tag == "Interactable_Obj" && Input.GetMouseButton(0))//Condicion para activar el npc
+            {
+                objInteract = hit.collider.gameObject;
+                print("Detecatado");
+                isGrabing = true;
+                print("isGrabing: " + isGrabing);
+                //ObjetosInteractuar(_obj.gameObject.name);//Le pasamos a la funcion el NPCText del NPC por ahora ser un dialogo
+                if (isGrabing)
+                {
+                    print("Cambiamos el Hijo");
+                    objInteract.transform.SetParent(_mano.transform, false); //0,0,0
+                    objInteract.GetComponent<Rigidbody>().useGravity = false;
+                    objInteract.GetComponent<Rigidbody>().isKinematic = true;
+                    print("Hijo Cambiado" + hit.transform.position);
+                    objInteract.transform.position = _mano.transform.position;
+                    print("Hijo Junto a padre " + hit.transform.position);
+                }
+               
+            }
+            
+              
+
+        }
+
+    }
+
+    void StopGrabing(GameObject _obj)
+    {
+        _obj.gameObject.GetComponent<Collider>().enabled = false;
+        Debug.DrawRay(camera.position, camera.forward * rayDistance, Color.green);
+        //Creamos el hit donde sacaremos toda la insformación
+        RaycastHit hit;
+
+        if (Physics.Raycast(camera.position, camera.forward, out hit, rayDistance))//casteamos el rayo desde camara y comprobamos los objetos en la mascara NPC_Checker
+        {
+
+            if (hit.collider.tag != "Interactable_Obj" && hit.collider.tag != "NPC" && Input.GetMouseButton(1) )//Condicion para activar el npc
+            {
+                gameObject.GetComponent<Collider>().enabled = false;
+                _obj.transform.SetParent(null);
+                _obj.transform.position = hit.point + new Vector3(0, 0.5f, 0);
+                _obj.GetComponent<Rigidbody>().useGravity = true;
+                objInteract.GetComponent<Rigidbody>().isKinematic = false;
+                _obj.gameObject.GetComponent<Collider>().enabled = true;
+                gameObject.GetComponent<Collider>().enabled = true;
+                isGrabing = false;
+            }
+        }
+    }
     void StartDialog(NPCText _npc)
     {
         //Esta funcion la utilizamo para leer el texto del NPC y mostrarlo por pantalla y Activar y desactivar los componentes que necesitamos
@@ -148,12 +226,13 @@ public class PlayerController : MonoBehaviour
         _subtitles.text = dialogueText[currentIndex];
         print("Termino");
     }
-  
+
     void HandleDialog()
     {
         //Ponemos un timer al dialogo
         dialogueTimer += Time.deltaTime;
-        if (dialogueTimer >= 5) { //Cada 5 segundos salta a la siguiente linea
+        if (dialogueTimer >= 5)
+        { //Cada 5 segundos salta a la siguiente linea
 
             dialogueTimer = 0f;
             currentIndex++;//aumentamos la posiscion de la array para leer la siguiente linea
@@ -164,7 +243,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                    EndDialogue();//terminamos en caso de que el index sobrepase la longitud del Dialogo
+                EndDialogue();//terminamos en caso de que el index sobrepase la longitud del Dialogo
             }
         }
     }
@@ -184,12 +263,12 @@ public class PlayerController : MonoBehaviour
     void ObjetosInteractuar(string _nombreObjeto)//Hit.Collider.gameObject.name
     {
         CrearListadeObjetos(); //Funcion que se encarga de llenar la lista y actualizarla si hay cambios
-        (string name, string descr, string path) = AccederObjetoLista(_nombreObjeto);//extraemos el nombre descr y Path de animacion
-        print(name);
+        (nameDB, descr, path) = AccederObjetoLista(_nombreObjeto);//extraemos el nombre descr y Path de animacion
+        print(nameDB);
         print(descr);
         print(path);
     }
-     void CrearListadeObjetos()//Crea lisa de objetos
+    void CrearListadeObjetos()//Crea lisa de objetos
     {
         lista.Clear();
         lista.Add(new InteractableObj("Carpeta de Historia clínica", "documento que recoge toda la información referente a la salud dental de un paciente", "Assets\\Resources\\Animations\\Cuchara.anim"));
@@ -295,7 +374,7 @@ public class PlayerController : MonoBehaviour
         lista.Add(new InteractableObj("Clamp", "Los clamps son abrazaderas metálicas que constringen la zona cervical de la corona dental para sujetar el dique de goma.", "Assets\\Resources\\Animations\\Cuchillo.anim"));
         lista.Add(new InteractableObj("Perforador de diques", "El perforador de diques es un instrumento que se emplea para producir un corte circular en la hoja del dique de hule que corresponda con el tamaño del diente que se necesita aislar, así al colocar un clamps se consigue un aislamiento absoluto.", "Assets\\Resources\\Animations\\Cuchillo.anim"));
         lista.Add(new InteractableObj("Portaclamps", "Los Porta clamps dentales son pinzas acodadas, con un ángulo en su parte activa que tiene la función de llevar o retirar el clamp.", "Assets\\Resources\\Animations\\Cuchillo.anim"));
-        lista.Add(new InteractableObj("Arco de young", "El arco Frame esta diseñado para su uso en aislamiento dental completo junto al dique de goma que actua como barrera y los clamps posicionados sobre el diente.", "Assets\\Resources\\Animations\\Cuchillo.anim"));
+        lista.Add(new InteractableObj("Arco de young", "El arco esta diseñado para su uso en aislamiento dental completo junto al dique de goma que actua como barrera y los clamps posicionados sobre el diente.", "Assets\\Resources\\Animations\\Cuchillo.anim"));
 
 
     }
