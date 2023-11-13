@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
 
+
 public class DetectorObjeto : MonoBehaviour
 {
     [SerializeField] GameObject instanciaPadre; //donde colocaremos los menus para que se vean en pantalla 
@@ -20,17 +21,22 @@ public class DetectorObjeto : MonoBehaviour
     public GameObject texDectect; //donde colocaremos F en el chat
     GameObject ultimoReconocido = null;
     GameObject fenChat;
-    private new Transform camera;
-    private new Rigidbody rigidbody;
+    private Transform camera;
+    private Rigidbody rigidbody;
+    private bool menuAbierto = false;
 
     // Start is called before the first frame update
     void Start()
     {
         mask = LayerMask.GetMask("DetecObject"); //he llamado a la mascara que detectara si es un objeto asi.
-        fenChat = Instantiate(texDectect, instanciaPadre.transform); //instanciamos F en el chat para que se encienda y se apage
-        rigidbody = GetComponent<Rigidbody>(); 
+        rigidbody = GetComponent<Rigidbody>();
         camera = transform.Find("Main Camera");
+        if (fenChat == null)
+        {
+            fenChat = Instantiate(texDectect, instanciaPadre.transform); //instanciamos F en el chat para que se encienda y se apage
+        }
         fenChat.SetActive(false);
+        video = GetComponent<VideoPlayer>();
 
     }
 
@@ -43,36 +49,34 @@ public class DetectorObjeto : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); //para mi prueba usaremos el raton lo quito por que no me funciona con la camara principal
         RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit, distancia, mask))
+        bool objetoDetectado = Physics.Raycast(ray, out hit, distancia, mask);
+
+
+        if (objetoDetectado)
         {
             //verificamos si el rayo intercepta con el objeto en la escena
-            Debug.Log("He detectado algo");
             ResaltarObjeto(hit.transform);
-
-
-            //F en el chat
-            if (Input.GetKeyDown(KeyCode.F))
-            {
-                if (hit.collider.gameObject != null)
-                {
-                    nombreObjeto = hit.collider.gameObject.name;
-
-                    if (textoInstanciado == null)
-                    {
-                        AbrirMenuFlotante();
-                    }
-                    else
-                    {
-                        CerrarMenuFlotante();
-                    }
-                }
-            }
+            nombreObjeto = hit.collider.gameObject.name;
         }
         else
         {
             Deseleccionado();
         }
 
+        //F en el chat
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            if (menuAbierto)
+            {
+                CerrarMenuFlotante();
+
+            }
+            else if (objetoDetectado)
+            {
+                AbrirMenuFlotante();
+            }
+
+        }
     }
 
     //esto habria que cambiarlo por el Shader ... cuando se pueda
@@ -97,33 +101,42 @@ public class DetectorObjeto : MonoBehaviour
     {
         if (ultimoReconocido)
         {
-            if (fenChat != null)
+            if (fenChat != null && !menuAbierto) //si el cartel de F esta deactivado y menu abierto quitado al tocar un objeto se activa
             {
                 fenChat.SetActive(true);
             }
             else
             {
-                Debug.LogWarning("El objeto fenChat no ha sido inicializado correctamente.");
-                fenChat.SetActive(false);
+                if (fenChat.activeSelf)
+                { //activeSelf se comprueba si esta activado, si algunas de las dos condiciones que la activaron ya no se cumple, se desactiva
+                    fenChat.SetActive(false);
+                }
             }
 
         }
         else
         {
-            if (fenChat != null)
+            if (fenChat.activeSelf)
             {
                 fenChat.SetActive(false);
             }
-            else
-            {
-                Debug.LogWarning("El objeto fenChat no ha sido inicializado correctamente.");
-            }
+
         }
     }
 
     void AbrirMenuFlotante()
     {
-        textoInstanciado = Instantiate(menu, instanciaPadre.transform); //instanciamos el texto flotante
+
+        Transform transP = instanciaPadre.transform; //accedemos al transforn del padre
+        menuAbierto = true;
+        float xPro = Screen.width * 0.280f;
+        float yPro = Screen.height * -0.1f;
+        Vector3 posPant = new Vector3(xPro, yPro, 0f); //
+        Vector3 posicionMundo = Camera.main.ScreenToViewportPoint(posPant);
+        textoInstanciado = Instantiate(menu, posicionMundo, Quaternion.identity); //instanciamos el texto flotante
+        textoInstanciado.transform.SetParent(transP); // Establece el padre del objeto instanciado como transP
+        textoInstanciado.transform.localPosition = posPant;
+        textoInstanciado.transform.localScale = Vector3.one; //Ajusta la escala si es necesario
         titulo = GameObject.Find("Titulo").GetComponent<TextMeshProUGUI>(); //instanciamos el titulo
         descripcion = GameObject.Find("Descripcion").GetComponent<TextMeshProUGUI>(); //Instanciamos Descripcion
         video = GameObject.Find("Video Player").GetComponent<VideoPlayer>(); //se supone que aqui va el video
@@ -137,29 +150,33 @@ public class DetectorObjeto : MonoBehaviour
         {
             Destroy(textoInstanciado);
             textoInstanciado = null;
+            menuAbierto = false;
         }
     }
 
     void InfoObjeto(string nombreObjeto)
     {
         //aqui va la ruta a la base de datos de los objetos 
-        string textFilePath = "2023_Clinica_Proyecto/Assets/Resources/dataB"; //sustituir null por ruta
-        //string videoFilePath = "Assets/Resources/Videos"; //sustituir null por ruta
+        string textFilePath = "Assets/Resources/dataB/" + nombreObjeto + ".txt"; //sustituir null por ruta
+        string videoFilePath = "Assets/Resources/Videos/" + nombreObjeto + ".mp4"; //sustituir null por ruta
 
-        if (File.Exists(textFilePath) ) //&& File.Exists(videoFilePath)
+        if (File.Exists(textFilePath) && File.Exists(videoFilePath))
         {
             //carga la descrcion del archivo de la base de datos
             string a = File.ReadAllText(textFilePath); //lee todo el contenido dentro de la base de datos del objeto
             descripcion.text = a;
 
             //carga el video
-            //video.url = videoFilePath;
-            //video.Play();
+            video.url = videoFilePath;
+            video.Play();
         }
         else
         {
             Debug.LogError("No se encontraro archivos de texto o video para el objeto: " + titulo.text);
         }
     }
-
 }
+
+
+
+
