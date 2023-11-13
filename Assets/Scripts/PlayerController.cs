@@ -54,7 +54,7 @@ public class PlayerController : MonoBehaviour
         canMove = true;
         canMoveCamera = true;
         //Prueba para interactuar con objetos
-        ObjetosInteractuar("Carpeta de Historia clínica");
+        ObjetosInteractuar("Curetas");
         isGrabing = false;
     }
 
@@ -165,6 +165,7 @@ public class PlayerController : MonoBehaviour
             if (hit.collider.tag == "Interactable_Obj" && Input.GetMouseButton(0))//Condicion para activar el npc
             {
                 objInteract = hit.collider.gameObject;
+                
                 print("Detecatado");
                 isGrabing = true;
                 print("isGrabing: " + isGrabing);
@@ -200,6 +201,7 @@ public class PlayerController : MonoBehaviour
 
             if (hit.collider.tag != "Interactable_Obj" && hit.collider.tag != "NPC" && Input.GetMouseButton(1) )//Condicion para activar el npc
             {
+                //_obj.GetComponent<OBJ>().ResetPosition();
                 gameObject.GetComponent<Collider>().enabled = false;
                 _obj.transform.SetParent(null);
                 _obj.transform.position = hit.point + new Vector3(0, 0.5f, 0);
