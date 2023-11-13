@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Objeto
+  - Interactable_Obj
   layers:
   - Default
   - TransparentFX
@@ -18,7 +19,7 @@ TagManager:
   - 
   - 
   - Interact
-  - 
+  - OBJ_Checker
   - 
   - 
   - 

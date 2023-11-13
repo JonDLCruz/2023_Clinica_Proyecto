@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro.EditorUtilities;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit.AffordanceSystem.Receiver.Primitives;
 
 public class FPCamera : MonoBehaviour
 {
@@ -15,8 +18,9 @@ public class FPCamera : MonoBehaviour
     public Texture2D puntero;
 
     //Variables para la interaccion de obejetos
-    public GameObject hand;
-    private GameObject objetoMano = null;
+    GameObject objInteract;
+    GameObject _mano;
+    private bool isGrabing;
 
     // Start is called before the first frame update
     void Start()
@@ -26,7 +30,9 @@ public class FPCamera : MonoBehaviour
         camera = transform.Find("Camera");
         Cursor.lockState = CursorLockMode.Locked;
 
-        
+        _mano = GameObject.Find("Hand");
+
+        isGrabing = false;
     }
 
     // Update is called once per frame
@@ -34,8 +40,15 @@ public class FPCamera : MonoBehaviour
     {
         CameraControl();
         Movmetcharacter();
-        //Rayocamera();
-        //SoltarObjeto();
+
+        if (!isGrabing)
+        {
+            RaycastObjectInteract();
+        }
+        else
+        {
+            StopGrabing(objInteract);
+        }
     }
 
     //Control de la camara con el raton
@@ -51,7 +64,6 @@ public class FPCamera : MonoBehaviour
 
         if (ver != 0)
         {
-            //Aqui realizamos que la camara con el ege vertical se establezca unas limitaciones
             float angle = (camera.localEulerAngles.x - ver * sensibility.y + 360) % 360;
             if (angle > 180)
             {
@@ -83,55 +95,69 @@ public class FPCamera : MonoBehaviour
     }
 
     //Funcionalidades del Rayo
-    /*
-    public void Rayocamera()
-    {
-        //Para que se pueda ver el Rayo
-        Debug.DrawRay(camera.position, camera.forward * rayDistance, Color.red);
 
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+    public void RaycastObjectInteract()
+    {
+        //Dibujamos el rayo para verlo en play
+        Debug.DrawRay(camera.position, camera.forward * rayDistance, Color.blue);
+        //Creamos el hit donde sacaremos toda la insformación
         RaycastHit hit;
 
-        if(Physics.Raycast(ray, out hit, rayDistance))
+        if (Physics.Raycast(camera.position, camera.forward, out hit, rayDistance, LayerMask.GetMask("OBJ_Checker")))//casteamos el rayo desde camara y comprobamos los objetos en la mascara NPC_Checker
         {
-            if (Input.GetKey(KeyCode.E))
+
+            if (hit.collider.tag == "Interactable_Obj" && Input.GetMouseButton(0))//Condicion para activar el npc
             {
-                RecogerObjeto();
+                objInteract = hit.collider.gameObject;
+                print("Detecatado");
+                isGrabing = true;
+                print("isGrabing: " + isGrabing);
+                //ObjetosInteractuar(_obj.gameObject.name);//Le pasamos a la funcion el NPCText del NPC por ahora ser un dialogo
+                if (isGrabing)
+                {
+                    print("Cambiamos el Hijo");
+                    objInteract.transform.SetParent(_mano.transform, false); //0,0,0
+                    objInteract.GetComponent<Rigidbody>().useGravity = false;
+                    objInteract.GetComponent<Rigidbody>().isKinematic = true;
+                    print("Hijo Cambiado" + hit.transform.position);
+                    objInteract.transform.position = _mano.transform.position;
+                    print("Hijo Junto a padre " + hit.transform.position);
+                }
+
+            }
+
+
+
+        }
+
+    }
+
+    void StopGrabing(GameObject _obj)
+    {
+        _obj.gameObject.GetComponent<Collider>().enabled = false;
+        Debug.DrawRay(camera.position, camera.forward * rayDistance, Color.green);
+        //Creamos el hit donde sacaremos toda la insformación
+        RaycastHit hit;
+
+        if (Physics.Raycast(camera.position, camera.forward, out hit, rayDistance))//casteamos el rayo desde camara y comprobamos los objetos en la mascara NPC_Checker
+        {
+
+            if (hit.collider.tag != "Interactable_Obj" && hit.collider.tag != "NPC" && Input.GetMouseButton(1))//Condicion para activar el npc
+            {
+                
+                gameObject.GetComponent<Collider>().enabled = false;
+                _obj.transform.SetParent(null);
+                _obj.transform.position = hit.point + new Vector3(0, 0.5f, 0);
+                _obj.GetComponent<Rigidbody>().useGravity = true;
+                objInteract.GetComponent<Rigidbody>().isKinematic = false;
+                _obj.gameObject.GetComponent<Collider>().enabled = true;
+                gameObject.GetComponent<Collider>().enabled = true;
+                isGrabing = false;
+
+                objInteract.GetComponent<ReturnInitial>().ResetPosition();
             }
         }
-        else
-        {
-            if (Input.GetKey(KeyCode.Q))
-            {
-                SoltarObjeto();
-            }
-        }
     }
-
-    private void RecogerObjeto(GameObject objeto)
-    {
-        if (objeto.gameObject.CompareTag("Objeto"))
-        {
-            objeto.GetComponent<Rigidbody>().useGravity = false;
-            objeto.GetComponent<Rigidbody>().isKinematic = true;
-            objeto.transform.position = hand.transform.position;
-            objeto.gameObject.transform.SetParent(hand.gameObject.transform);
-            objetoMano = objeto.gameObject;
-
-        }
-    }
-
-    private void SoltarObjeto()
-    {
-        if(objetoMano != null)
-        {
-            objetoMano.GetComponent<Rigidbody>().useGravity = true;
-            objetoMano.GetComponent<Rigidbody>().isKinematic = false;
-            objetoMano.gameObject.transform.SetParent(null);
-            objetoMano = null;
-        }
-    }
-    */
 
     private void OnGUI()
     {
