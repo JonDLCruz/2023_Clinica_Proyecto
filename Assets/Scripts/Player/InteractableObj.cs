@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
-public class InteractableObj
+public class InteractableObj 
 {
     public string name;
     public string descr;

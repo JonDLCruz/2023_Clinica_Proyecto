@@ -59,6 +59,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         _GM = GameObject.Find("GameManager").GetComponent<GameManager>();
+        _GM.CrearListadeObjetos(); //Funcion que se encarga de llenar la lista y actualizarla si hay cambios
         _AS = GameObject.Find("GameManager").GetComponent<AudioInstance>();
         //Set del rigidBody
         rigidbody = GetComponent<Rigidbody>();
@@ -415,7 +416,7 @@ public class PlayerController : MonoBehaviour
 
     void ObjetosInteractuar(string _nombreObjeto)//Hit.Collider.gameObject.name
     {
-        _GM.CrearListadeObjetos(); //Funcion que se encarga de llenar la lista y actualizarla si hay cambios
+        
         (nameDB, descr, path) = _GM.AccederObjetoLista(_nombreObjeto);//extraemos el nombre descr y Path de animacion
         print(nameDB);
         print(descr);

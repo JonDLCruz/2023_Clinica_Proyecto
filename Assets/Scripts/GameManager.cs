@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,9 @@ public class GameManager : MonoBehaviour
 {
     //Listas
     List<InteractableObj> lista = new List<InteractableObj>();
+    //ObjetoInteractable
+    private ObjInteractable db;
+    public ObjInteractable.Objeto Obj;
     //Botones 
     public void Actividad1()
     {
@@ -28,6 +32,7 @@ public class GameManager : MonoBehaviour
     public void CrearListadeObjetos()//Crea lisa de objetos
     {
         lista.Clear();
+       
         lista.Add(new InteractableObj("Carpeta de Historia clínica", "documento que recoge toda la información referente a la salud dental de un paciente", "Assets\\Resources\\Animations\\Cuchara.anim"));
         lista.Add(new InteractableObj("Ficha dental", "es una cédula que posee un sistema de anotación, un esquema dentario y pautas destinadas para consignar datos de interés profesional", "Assets\\Resources\\Animations\\Tenedor.anim"));
         lista.Add(new InteractableObj("Hoja de anamnesis", "Se usa para cortar, ¿El que? lo dejo en tu mano", "Assets\\Resources\\Animations\\Cuchillo.anim"));
@@ -134,6 +139,35 @@ public class GameManager : MonoBehaviour
         lista.Add(new InteractableObj("Arco de young", "El arco esta diseñado para su uso en aislamiento dental completo junto al dique de goma que actua como barrera y los clamps posicionados sobre el diente.", "Assets\\Resources\\Animations\\Cuchillo.anim"));
 
 
+    }
+    public void CrearListadeScriptableObjets()
+    {
+        //Aqui metemos la lista de arriba bajo esta sentencia
+        //CrearDBScriptableObjects(string _name, string _desc, string _videoPath, string _animPath, string _photoPath);
+
+    }//Crea lisa de objetos
+    public void CrearDBScriptableObjects(string _name, string _desc, string _videoPath, string _animPath, string _photoPath)
+    {
+        for (int i = 0; i < db.objetosClinica.Length; i++)
+        {
+            if (db.objetosClinica[i].Name != null)
+            {
+                db.objetosClinica[i].Name = _name;
+                db.objetosClinica[i].Descr = _desc;
+                db.objetosClinica[i].VideoPath = _videoPath;
+                db.objetosClinica[i].AnimPath = _animPath;
+                db.objetosClinica[i].Photopath = _photoPath;
+            }
+        }
+    }
+    public void CargarDatosScriptableObjDB(int _id)
+    {
+        Obj.ID = _id;
+        Obj.Name = db.objetosClinica[_id].Name;
+        Obj.Descr = db.objetosClinica[_id].Descr;
+        Obj.VideoPath = db.objetosClinica[_id].VideoPath;
+        Obj.AnimPath = db.objetosClinica[_id].AnimPath;
+        Obj.Photopath = db.objetosClinica[_id].Photopath;
     }
     public (string, string, string) AccederObjetoLista(string _name)
     {
