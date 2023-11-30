@@ -12,4 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8031b75fa3af059469eee92103f1d64f, type: 3}
   m_Name: ListaDeUsuarios
   m_EditorClassIdentifier: 
-  registro: []
+  registro:
+  - ID: 0
+    user: "123\u200B"
+    email: "123\u200B"
+    password: "***\u200B"
+    confiPass: "***\u200B"
+    newPlayer: 0

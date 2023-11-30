@@ -7,6 +7,7 @@ using UnityEngine;
 public class RegistroManager : MonoBehaviour
 {
     public Usuario usuario;
+    [SerializeField] private GameObject error;
     public TMP_Text textuser;
     public TMP_Text textemail;
     public TMP_Text textpassword;
@@ -16,11 +17,13 @@ public class RegistroManager : MonoBehaviour
     //metodo para agregar un nuevo usuario a la lista
     public void AddUser()
     {
-        mensajeError.enabled = false; 
+        error.SetActive(false);
+        mensajeError.text = "Error. Usuario o contraseña ya existente";
         string newUser = textuser.text;
         string newEmail = textemail.text;
         string newPassword = textpassword.text;
         string newConfirmP = textconfirmarPassw.text;
+         
 
         //verificamos si el usuario y el correo ya esten en la lista
         bool userExist = false;
@@ -51,7 +54,8 @@ public class RegistroManager : MonoBehaviour
                 user = newUser,
                 email = newEmail,
                 password = newPassword,
-                confiPass = newConfirmP
+                confiPass = newConfirmP,
+                newPlayer = true
             };
 
             int newLength = usuario.registro.Length + 1;
@@ -61,7 +65,7 @@ public class RegistroManager : MonoBehaviour
         }
         else
         {
-            mensajeError.enabled = true;
+            error.SetActive(true);
         }
     }
 

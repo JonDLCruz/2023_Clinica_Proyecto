@@ -8,6 +8,7 @@ public struct Registro
     public string email;
     public string password;
     public string confiPass;
+    public bool newPlayer;
     //public Baseuser baseuser;
 }
 
@@ -46,6 +47,7 @@ public class Usuario : ScriptableObject
                     registro[i].email = "linea temporal";
                     registro[i].password = "linea temporal";
                     registro[i].confiPass = "linea temporal";
+                    registro[i].newPlayer = true;
 
                 }
             }
