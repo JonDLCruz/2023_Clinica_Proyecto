@@ -1,8 +1,10 @@
 using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.IO;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,6 +13,11 @@ public class GameManager : MonoBehaviour
     //ObjetoInteractable
     private ObjInteractable db;
     public ObjInteractable.Objeto Obj;
+   
+    private void Start()
+    {
+        SaveData(1,"jon","123a",1,true,false,false,false,false);
+    }
     //Botones 
     public void Actividad1()
     {
@@ -180,5 +187,25 @@ public class GameManager : MonoBehaviour
         {
             throw new System.Exception("No ta");//ERROR: No encuentra objeto
         }
+    }
+
+    public void SaveData(int _id,string _user, string _pass, int _done, bool _ac1, bool _ac2, bool _ac3, bool _ac4, bool _ac5)
+    {
+        SaveData.DataSave saveData = new SaveData.DataSave();
+        saveData.id = _id;
+        saveData.user = _user;
+        saveData.password = _pass;
+        saveData.activityDone = _done;
+        saveData.activity_01 = _ac1; 
+        saveData.activity_02 = _ac2;
+        saveData.activity_03 = _ac3;
+        saveData.activity_04 = _ac4;
+        saveData.activity_05 = _ac5;
+
+        string save = JsonUtility.ToJson(saveData);
+        string path = Path.Combine(Application.persistentDataPath, "saveUser.data");
+        Debug.Log(path);
+        File.WriteAllText(path, save);
+
     }
 }
