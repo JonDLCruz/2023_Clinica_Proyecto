@@ -12,7 +12,7 @@ public class RegistroManager : MonoBehaviour
     public TMP_Text textemail;
     public TMP_Text textpassword;
     public TMP_Text textconfirmarPassw;
-    public TMP_Text mensajeError; 
+    public TMP_Text mensajeError;
 
     //metodo para agregar un nuevo usuario a la lista
     public void AddUser()
@@ -23,7 +23,7 @@ public class RegistroManager : MonoBehaviour
         string newEmail = textemail.text;
         string newPassword = textpassword.text;
         string newConfirmP = textconfirmarPassw.text;
-         
+
 
         //verificamos si el usuario y el correo ya esten en la lista
         bool userExist = false;
@@ -39,7 +39,7 @@ public class RegistroManager : MonoBehaviour
         foreach (Registro registro in usuario.registro)
             if (registro.email == newEmail)
             {
-                emailExist = true; 
+                emailExist = true;
                 break;
             }
 
@@ -55,12 +55,13 @@ public class RegistroManager : MonoBehaviour
                 email = newEmail,
                 password = newPassword,
                 confiPass = newConfirmP,
-                newPlayer = true
+                newPlayer = true,
             };
 
             int newLength = usuario.registro.Length + 1;
             Array.Resize(ref usuario.registro, newLength);
             usuario.registro[newLength - 1] = nuevoRegistro;
+            mensajeError.text = "Usuario creado Correctamente";
 
         }
         else

@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using System;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class LoginManager : MonoBehaviour
 {
@@ -67,8 +68,9 @@ public class LoginManager : MonoBehaviour
             if (logNewPlayer)
             {
                 Debug.Log("Aparece Oak");
-                m_loginUI.SetActive(false);
                 m_introUI.SetActive(true);
+                
+                
                 for (int i = 0; i < usuario.registro.Length; i++)
                 {
                     if (usuario.registro[i].user == logUser)
@@ -86,6 +88,7 @@ public class LoginManager : MonoBehaviour
             else
             {
                 Debug.Log("cambio de escena");
+                SceneManager.LoadScene(1);
             }
 
         }

@@ -208,18 +208,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 78459857}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5df2bda902e1f8649934d2e7ec6527cd, type: 3}
+  m_Script: {fileID: 11500000, guid: 7b3b741947b81cc4fa55d2d1f3658951, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   dialogoPanel: {fileID: 1704064716}
   m_introUI: {fileID: 1006771910}
+  m_loginUI: {fileID: 504433863}
   dialogo: {fileID: 1797891891}
-  dialogueLines:
-  - Saludos entrenador soy el profesor oak
-  - 
-  - 
-  - 
-  - 
+  didDialogueStart: 0
+  dialogoIntro:
+    lines: []
+  dialogoOak: {fileID: 118606134}
 --- !u!1 &90883211
 GameObject:
   m_ObjectHideFlags: 0
@@ -354,6 +353,53 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 90883211}
   m_CullTransparentMesh: 1
+--- !u!1 &118606133
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 118606135}
+  - component: {fileID: 118606134}
+  m_Layer: 0
+  m_Name: Dialogo
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &118606134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 118606133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5df2bda902e1f8649934d2e7ec6527cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  intro:
+    lines: []
+  userlogin: {fileID: 504433865}
+--- !u!4 &118606135
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 118606133}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 7.072032, y: 0.8004825, z: -3.0053275}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &187769575
 GameObject:
   m_ObjectHideFlags: 0
@@ -3533,8 +3579,8 @@ MonoBehaviour:
   m_VerticalScrollbarEventHandler: {fileID: 0}
   m_LayoutGroup: {fileID: 0}
   m_ScrollSensitivity: 1
-  m_ContentType: 7
-  m_InputType: 2
+  m_ContentType: 0
+  m_InputType: 0
   m_AsteriskChar: 42
   m_KeyboardType: 0
   m_LineType: 0
@@ -3708,8 +3754,8 @@ MonoBehaviour:
   m_VerticalScrollbarEventHandler: {fileID: 0}
   m_LayoutGroup: {fileID: 0}
   m_ScrollSensitivity: 1
-  m_ContentType: 7
-  m_InputType: 2
+  m_ContentType: 0
+  m_InputType: 0
   m_AsteriskChar: 42
   m_KeyboardType: 0
   m_LineType: 0
@@ -5744,7 +5790,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Saludos entrenador pokemon soy el profesor oak.
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 105455b855fc7d64da4992acc0b596e8, type: 2}
   m_sharedMaterial: {fileID: -2234034412922814890, guid: 105455b855fc7d64da4992acc0b596e8, type: 2}
@@ -6159,3 +6205,4 @@ SceneRoots:
   - {fileID: 1652674532}
   - {fileID: 852871849}
   - {fileID: 1404541896}
+  - {fileID: 118606135}

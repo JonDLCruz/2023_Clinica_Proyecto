@@ -1,72 +1,28 @@
-using System.Collections;
 using UnityEngine;
-using TMPro;
+
+
 
 public class Dialogo : MonoBehaviour
 {
-    [SerializeField] private GameObject dialogoPanel;
-    [SerializeField] private GameObject m_introUI;
-    [SerializeField] private TMP_Text dialogo;
-    [SerializeField, TextArea(3,3)] private string[] dialogueLines;
+    public Introduccion intro;
+    public LoginManager userlogin;
 
-    private bool didDialogueStart;
-    private int lineIndex;
-    private float tipingTime = 0.05f;
-
-
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        if (m_introUI.activeSelf && !didDialogueStart)
-        {
-            StartDialogue();
-        }
-        else if (dialogo.text == dialogueLines[lineIndex])
-        {
-            NextDialogueLine();
-        }
-        else
-        {
-            StopAllCoroutines();
-            dialogo.text = dialogueLines[lineIndex];
-        }
-
+        string usuarioActivo = userlogin.logUser;
+        Debug.Log("Valor de usuario: " + usuarioActivo);
+        intro = new Introduccion();
+        intro.lines = new string[]
+        {  //Saludos entrenador pokemon soy el profesor oak.
+            "Bienvenido " + usuarioActivo,
+            "Soy el profesor Piñitos",
+            "Estas apunto de aventurarte en una fantastica aventura",
+            "de reparacion de dientes y caries",
+            "acompañame a la clinica."
+        };
     }
 
-    private void StartDialogue()
-    {
-        didDialogueStart = true;
-        //aqui iria activar panel y desactivar marcas si las hubiere. 
-        lineIndex = 0;
-        StartCoroutine(Showline());
-    }
-
-    private void NextDialogueLine()
-    {
-        lineIndex++;
-        if (lineIndex >= dialogueLines.Length)
-        {
-            StartCoroutine(Showline());
-        }
-        else
-        {
-            didDialogueStart = false;
-            //aqui iria desactivar panel y activar marcas si las hubiere.
-        } 
-       
-    }
-
-    private IEnumerator Showline()
-    {
-        dialogo.text = string.Empty;
-
-        foreach (char ch in dialogueLines[lineIndex])
-        {
-            dialogo.text += ch;
-            yield return new WaitForSeconds(tipingTime);
-                }
-
-    }
+    
 
 
 }

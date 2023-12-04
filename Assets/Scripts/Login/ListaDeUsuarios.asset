@@ -16,6 +16,12 @@ MonoBehaviour:
   - ID: 0
     user: "123\u200B"
     email: "123\u200B"
-    password: "***\u200B"
-    confiPass: "***\u200B"
+    password: "123\u200B"
+    confiPass: "123\u200B"
+    newPlayer: 0
+  - ID: 1
+    user: "Pepe\u200B"
+    email: "Pepe\u200B"
+    password: "111\u200B"
+    confiPass: "111\u200B"
     newPlayer: 0
