@@ -7,9 +7,12 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 1
     path: Assets/Scenes/Menu.unity
-    guid: 229bbf60a1e2a024aba4d715f4e0197e
+    guid: b1d24d90a00c589408a104b686dcdd33
   - enabled: 1
     path: Assets/Scenes/Clinica_01.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/Scenes/PC/Actividad_01.unity
+    guid: 3493014f3f21ff044bd34ed1d9a15e18
   m_configObjects:
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 529f08ed292a33e478295da6078495a9, type: 2}

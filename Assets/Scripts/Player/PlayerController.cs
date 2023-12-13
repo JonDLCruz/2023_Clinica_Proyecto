@@ -30,9 +30,10 @@ public class PlayerController : MonoBehaviour
     //Menus Chat NPC
     public GameObject panelInfo;
     public TextMeshProUGUI _subtitles, _interactInfo;
-    public GameObject _actividades, _panelSubtitles, _panelActividades;
+    public GameObject _panelSubtitles, _panelActividades;
     //Menus Objetos
-    public TextMeshProUGUI _tituloObj, _descObj, _nameObj;
+    public GameObject panelObjeto;
+    public TextMeshProUGUI _tituloObj, _descObj;
     public VideoPlayer _vid;
     public GameObject MenuObjeto;
     //Variables control de Dialgo
@@ -54,6 +55,13 @@ public class PlayerController : MonoBehaviour
     private GameObject _mano;
     public bool isGrabing;
     public bool timeToReset;
+    //Animación
+    private Animator animator;
+    //Callcular si esta en el suelo
+    public float raycastDistance = 0.1f;
+    public LayerMask groundLayer;
+    private Rigidbody rb;
+    bool grounded;
 
     // Start is called before the first frame update
     void Start()
@@ -68,7 +76,7 @@ public class PlayerController : MonoBehaviour
         //Cursor settings
         UnityEngine.Cursor.lockState = CursorLockMode.Locked;
         //Ocultamos Menu
-        _actividades.SetActive(false);
+        
         _panelSubtitles.SetActive(false);
         _panelActividades.SetActive(false);
         panelInfo.SetActive(false);
@@ -81,12 +89,13 @@ public class PlayerController : MonoBehaviour
         isGrabing = false;
         timeToReset = false;
         pState = PlayerState.IDLE;
-
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        grounded = IsGrounded();
         rayCheck();
         //Controlador para poder moverse o no
         if (canMove)
@@ -100,9 +109,23 @@ public class PlayerController : MonoBehaviour
             HandleDialog();
         }
         PlayerStateMachine();
-
+        if(isGrabing&& Input.GetKeyDown(KeyCode.R))//Esto solo es para las animaciones de los objetos en mano
+        {
+            //Metemos la animación del objeto
+            ObjetosInteractuar(objInteract.name);
+            PlayAnim(path);
+        }
+        print(pState);
     }
-
+    void PlayAnim(string _path)
+    {
+        AnimationClip clip = Resources.Load<AnimationClip>(_path); 
+        if (clip != null)
+        {
+            Debug.LogError("No se pudo cargar la animación desde Resources: " + _path);
+            return;
+        }
+    }
     public void CameraControl()
     {
         //Inputs
@@ -182,10 +205,22 @@ public class PlayerController : MonoBehaviour
             pState = PlayerState.JUMP;
             Jump();
         }
-        else
+        else if (grounded)
         {
+            
             pState = PlayerState.IDLE;
         }
+    }
+   
+    bool IsGrounded()
+    {
+        // Obtener la posición del objeto
+        Vector3 position = transform.position;
+
+        // Lanzar un rayo hacia abajo desde la posición del objeto
+        bool hitGround = Physics.Raycast(position, Vector3.down, raycastDistance, groundLayer);
+
+        return hitGround;
     }
     public void Jump()
     {
@@ -375,7 +410,7 @@ public class PlayerController : MonoBehaviour
         UnityEngine.Cursor.lockState = CursorLockMode.None;//Liberamos el raton para que el usuario pueda seleccionar las opciones que vamos a mostrar
         dialogueText = _npc.arrayText;
         currentIndex = 0;
-        _actividades.SetActive(true);
+       
         _panelSubtitles.SetActive(true);
         _subtitles.text = dialogueText[currentIndex];
         print("Termino");
@@ -410,7 +445,6 @@ public class PlayerController : MonoBehaviour
         UnityEngine.Cursor.lockState = CursorLockMode.Locked;
         _panelActividades.SetActive(false);
         _panelSubtitles.SetActive(false);
-        _actividades.SetActive(false);
         dialogueText = null;
     }
 

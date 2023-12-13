@@ -5,18 +5,81 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.IO;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
     //Listas
     List<InteractableObj> lista = new List<InteractableObj>();
+    public string path;
     //ObjetoInteractable
     private ObjInteractable db;
     public ObjInteractable.Objeto Obj;
-   
+    public GameObject _menuOpciones,_menuGraficos,_menuGeneral;
+    bool paused = false;
+
     private void Start()
     {
-        SaveData(1,"jon","123a",1,true,false,false,false,false);
+        _menuOpciones.SetActive(false);
+        path = Path.Combine(Application.persistentDataPath, "saveUser.data");
+        //SaveData(1,"jon","123a",1,true,false,false,false,false);
+        //Aqui pasaremos los datos de guardado
+    }
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Cursor.lockState = CursorLockMode.Confined;
+            AbrirMenu();
+        }
+    }
+    public void AbrirMenu()
+    {
+        PlayerController pl = GameObject.Find("Player").GetComponent<PlayerController>();
+        pl.canMove = false;
+        pl.canMoveCamera = false;
+        paused = togglePause();
+        _menuOpciones.SetActive(true);
+        
+    }
+    bool togglePause() //REPASAR
+    {
+        if (Time.timeScale == 0f)
+        {
+            Time.timeScale = 1f;
+            return (false);
+        }
+        else
+        {
+            Time.timeScale = 0f;
+            return (true);
+        }
+    }
+    public void MenuGeneral()
+    {
+        _menuGeneral.SetActive(true);
+        _menuGraficos.SetActive(false);
+    }
+    public void MenuGraficos()
+    {
+        _menuGeneral.SetActive(false);
+        _menuGraficos.SetActive(true);
+    }
+    public void MenuControles()
+    {
+
+    }
+    public void CerrarMenu()
+    {
+        PlayerController pl = GameObject.Find("Player").GetComponent<PlayerController>();
+        pl.canMove = true;
+        pl.canMoveCamera = true;
+        paused = togglePause();
+        _menuOpciones.SetActive(false);
+        _menuGraficos.SetActive(false);
+        _menuGeneral.SetActive(false );
+        Cursor.lockState = CursorLockMode.Locked;
+
     }
     //Botones 
     public void Actividad1()
@@ -34,6 +97,10 @@ public class GameManager : MonoBehaviour
     public void LoadSceneClinica()
     {
         SceneManager.LoadScene("Clinica_01");
+    }
+    public void AyudaExterna()
+    {
+        //REFERENCIA A EL MANUAL WEB
     }
     //Metodos
     public void CrearListadeObjetos()//Crea lisa de objetos
@@ -203,9 +270,38 @@ public class GameManager : MonoBehaviour
         saveData.activity_05 = _ac5;
 
         string save = JsonUtility.ToJson(saveData);
-        string path = Path.Combine(Application.persistentDataPath, "saveUser.data");
         Debug.Log(path);
         File.WriteAllText(path, save);
+    }
+    public SaveData.DataSave LoadData(int _id)
+    {
+        if(File.Exists(path))
+        {
+            string loadedData = File.ReadAllText(path);
+            SaveData.DataSave saveData = JsonUtility.FromJson<SaveData.DataSave>(loadedData);
+
+            if(saveData.id == _id)
+            {
+                Debug.Log("Data Load");
+                return saveData;
+            }
+            else
+            {
+                Debug.Log("Error 404: Id not Found");
+            }
+        }
+        else
+        {
+            Debug.Log("Error 404: Save not found");
+        }
+
+        return new SaveData.DataSave();
 
     }
+    
+    public void ExitApp()
+    {
+        Application.Quit();
+    }
+    
 }
