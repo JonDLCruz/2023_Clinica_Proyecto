@@ -364,7 +364,7 @@ public class PlayerController : MonoBehaviour
         canMove = false;
         canMoveCamera = false;
         UnityEngine.Cursor.lockState = CursorLockMode.None;//Liberamos el raton para que el usuario pueda seleccionar las opciones que vamos a mostrar
-        dialogueText = _npc.arrayText;
+        dialogueText = _npc.presentacionNPC.lines;
         currentIndex = 0;
         _actividades.SetActive(true);
         _panelSubtitles.SetActive(true);

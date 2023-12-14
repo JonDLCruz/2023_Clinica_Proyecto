@@ -3997,6 +3997,62 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1276469664}
   m_CullTransparentMesh: 1
+--- !u!1 &1295798242
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1295798244}
+  - component: {fileID: 1295798243}
+  m_Layer: 0
+  m_Name: LoginManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1295798243
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1295798242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5704a6fc8c130449ba2dac3b61cd3e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  usuario: {fileID: 11400000, guid: f62e855145a298a408d737e9eb86a075, type: 2}
+  loginManager: {fileID: 504433865}
+  iDActiveUser: 0
+  nameActiveUser: 
+  emailActiveUser: 
+  activityDoneActiveUser: 0
+  logrosActiveUser: 0
+  activity01ActiveUser: 0
+  activity02ActiveUser: 0
+  activity03ActiveUser: 0
+  activity04ActiveUser: 0
+  activity05ActiveUser: 0
+--- !u!4 &1295798244
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1295798242}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.42693174, y: 1.1108665, z: 15.39313}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1316554431
 GameObject:
   m_ObjectHideFlags: 0
@@ -6206,3 +6262,4 @@ SceneRoots:
   - {fileID: 852871849}
   - {fileID: 1404541896}
   - {fileID: 118606135}
+  - {fileID: 1295798244}
