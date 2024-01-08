@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour
     public Vector2 sensibility;
     public new Transform camera;
     private new Rigidbody rigidbody;
-    public float movmentSpeed;
+    public float movmentSpeed = 1.5F;
     public float jumpForce = 20f;
     //Variables de restriccion de movimiento
     public bool canMove, canMoveCamera;
@@ -55,13 +55,15 @@ public class PlayerController : MonoBehaviour
     private GameObject _mano;
     public bool isGrabing;
     public bool timeToReset;
-    //Animación
-    private Animator animator;
+    //Animaciï¿½n
+    public Animator animator;
     //Callcular si esta en el suelo
     public float raycastDistance = 0.1f;
     public LayerMask groundLayer;
     private Rigidbody rb;
     bool grounded;
+    public AudioSource audiosource;
+
 
     // Start is called before the first frame update
     void Start()
@@ -89,7 +91,9 @@ public class PlayerController : MonoBehaviour
         isGrabing = false;
         timeToReset = false;
         pState = PlayerState.IDLE;
-        animator = GetComponent<Animator>();
+        //animator = GetComponent<Animator>();
+        animator = GameObject.Find("casual_Male_K").GetComponentInParent<Animator>();
+        audiosource = GameObject.Find("FootSound").GetComponentInParent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -111,7 +115,7 @@ public class PlayerController : MonoBehaviour
         PlayerStateMachine();
         if(isGrabing&& Input.GetKeyDown(KeyCode.R))//Esto solo es para las animaciones de los objetos en mano
         {
-            //Metemos la animación del objeto
+            //Metemos la animaciï¿½n del objeto
             ObjetosInteractuar(objInteract.name);
             PlayAnim(path);
         }
@@ -122,7 +126,7 @@ public class PlayerController : MonoBehaviour
         AnimationClip clip = Resources.Load<AnimationClip>(_path); 
         if (clip != null)
         {
-            Debug.LogError("No se pudo cargar la animación desde Resources: " + _path);
+            Debug.LogError("No se pudo cargar la animaciï¿½n desde Resources: " + _path);
             return;
         }
     }
@@ -136,10 +140,10 @@ public class PlayerController : MonoBehaviour
         {
             transform.Rotate(Vector3.up * hor * sensibility.x);//Recordad que el movimiento de camara tiene que ir con el movimiento del jugador por eso usamos el transform del player
         }
-        //Comprovamos movimiento Vertical
+        //Comprobamos movimiento Vertical
         if (ver != 0)
         {
-            //Formua para calcular el angulo actual de la camara
+            //Formula para calcular el angulo actual de la camara
             float angle = (camera.localEulerAngles.x - ver * sensibility.y + 360) % 360;
             //Condicion y clampeo de la camara.
             if (angle > 180)
@@ -214,10 +218,10 @@ public class PlayerController : MonoBehaviour
    
     bool IsGrounded()
     {
-        // Obtener la posición del objeto
+        // Obtener la posiciï¿½n del objeto
         Vector3 position = transform.position;
 
-        // Lanzar un rayo hacia abajo desde la posición del objeto
+        // Lanzar un rayo hacia abajo desde la posiciï¿½n del objeto
         bool hitGround = Physics.Raycast(position, Vector3.down, raycastDistance, groundLayer);
 
         return hitGround;
@@ -228,17 +232,59 @@ public class PlayerController : MonoBehaviour
     }
     public void PlayerStateMachine()
     {
+        float hor = Input.GetAxisRaw("Horizontal");
+        float ver = Input.GetAxisRaw("Vertical");
+        float walkPitch = 0.82f;
+        float runPitch = 0.88f;
+
+        
         switch (pState)
         {
             case PlayerState.WALK:
                 //Audio walk
                 //_AS.SelectAudio("walk");
                 //todo  lo relacionado con moverse
+                animator.Play("Blend Tree");
+                animator.SetFloat("VelX", hor);
+                animator.SetFloat("VelY", ver);
+                movmentSpeed = 1.5f;
+
+                if (hor != 0 || ver != 0)
+                {
+                    if (!audiosource.isPlaying) {
+                        audiosource.pitch = walkPitch;
+                        audiosource.Play();
+                    }                    
+                }
+                else audiosource.Stop();
+
                 break;
             case PlayerState.RUN:
                 //Audio Run
                 //_AS.SelectAudio("run");
                 //Todo lo reacionado con correr
+                if (Input.GetKey(KeyCode.LeftShift) & (hor != 0 || ver != 0))
+                {
+                    animator.Play("Run");
+                }
+                else animator.Play("Blend Tree");
+
+                if (Input.GetKeyUp(KeyCode.LeftShift))
+                    animator.Play("Idle");
+                    
+
+                movmentSpeed = 4.0f;
+
+                if (Input.GetKey(KeyCode.LeftShift) & hor != 0 || ver != 0 )
+                {
+                    if (!audiosource.isPlaying)
+                    {
+                        audiosource.pitch = runPitch;
+                        audiosource.Play();
+                    }
+                }
+                else audiosource.Stop();
+
                 break;
             case PlayerState.INTERACT:
                 //Audio Depende del Objeto
@@ -249,7 +295,7 @@ public class PlayerController : MonoBehaviour
                 //Audio idle si eso
                 //_AS.SelectAudio("Idle");
                 //animacion Idle
-                //todo lo relacionado con el Idle
+                //todo lo relacionado con el Idle          
                 break;
             case PlayerState.CROUCH:
                 //Audio Arrastrarse
@@ -270,7 +316,7 @@ public class PlayerController : MonoBehaviour
     {
         //Dibujamos el rayo para verlo en play
         Debug.DrawRay(camera.position, camera.forward * rayDistance, Color.red);
-        //Creamos el hit donde sacaremos toda la insformación
+        //Creamos el hit donde sacaremos toda la insformaciï¿½n
         RaycastHit hit;
 
         if (Physics.Raycast(camera.position, camera.forward, out hit, rayDistance, LayerMask.GetMask("NPC_Checker")) && !isTalking)//casteamos el rayo desde camara y comprobamos los objetos en la mascara NPC_Checker
@@ -297,7 +343,7 @@ public class PlayerController : MonoBehaviour
     {
         //Dibujamos el rayo para verlo en play
         Debug.DrawRay(camera.position, camera.forward * rayDistance, Color.blue);
-        //Creamos el hit donde sacaremos toda la insformación
+        //Creamos el hit donde sacaremos toda la insformaciï¿½n
         RaycastHit hit;
 
         if (Physics.Raycast(camera.position, camera.forward, out hit, rayDistance, LayerMask.GetMask("OBJ_Checker")))//casteamos el rayo desde camara y comprobamos los objetos en la mascara NPC_Checker
@@ -377,7 +423,7 @@ public class PlayerController : MonoBehaviour
     {
         _obj.gameObject.GetComponent<Collider>().enabled = false;
         Debug.DrawRay(camera.position, camera.forward * rayDistance, Color.green);
-        //Creamos el hit donde sacaremos toda la insformación
+        //Creamos el hit donde sacaremos toda la insformaciï¿½n
         RaycastHit hit;
 
         if (Physics.Raycast(camera.position, camera.forward, out hit, rayDistance))//casteamos el rayo desde camara y comprobamos los objetos en la mascara NPC_Checker
