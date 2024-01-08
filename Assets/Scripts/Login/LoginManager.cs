@@ -5,6 +5,7 @@ using TMPro;
 using System;
 using System.Linq;
 using UnityEngine.SceneManagement;
+using static Usuario;
 
 public class LoginManager : MonoBehaviour
 {

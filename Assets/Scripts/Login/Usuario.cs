@@ -1,29 +1,30 @@
 using Unity.VisualScripting;
 using UnityEngine;
 
-[System.Serializable]
-public struct Registro
-{
-    public int ID;
-    public string user;
-    public string email;
-    public string password;
-    public string confiPass;
-    public bool newPlayer;
-    public int activityDone;
-    public int logros;
-    public bool activity01;
-    public bool activity02;
-    public bool activity03;
-    public bool activity04;
-    public bool activity05;
-    //public Baseuser baseuser;
-}
+
+
 
 [CreateAssetMenu(fileName = "ListaDeUsuarios", menuName = "Registro/Usuario", order = 1)]
 
 public class Usuario : ScriptableObject
 {
+    [System.Serializable]
+    public struct Registro
+    {
+        public int ID;
+        public string user;
+        public string email;
+        public string password;
+        public string confiPass;
+        public bool newPlayer;
+        public int activityDone;
+        public int logros;
+        public bool activity01;
+        public bool activity02;
+        public bool activity03;
+        public bool activity04;
+        public bool activity05;
+    }
     public Registro[] registro;
 
     //se llama cuando se carga el scrip y cuando este se cambia en el inspector

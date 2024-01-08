@@ -17,6 +17,10 @@ public class DialogoManager : MonoBehaviour
     private int lineIndex = 0;
     [SerializeField] private Introduccion dialogoIntro;
     [SerializeField] private Dialogo dialogoOak;
+    /////////////////////////////////////////////////////////////
+   
+
+   
 
     public void StarDialog(Dialogo dialogo)
     {
@@ -47,6 +51,7 @@ public class DialogoManager : MonoBehaviour
 
     private void Start()
     {
+      
     }
     // Update is called once per frame
     void Update()
@@ -55,7 +60,7 @@ public class DialogoManager : MonoBehaviour
         {
             Debug.Log("deberia comenzar a hablar Oak");
             StarDialog(dialogoOak);
-        } 
+        }
         if (didDialogueStart && Input.GetKeyDown(KeyCode.Space))
         {
             ShowDialog();
@@ -67,4 +72,8 @@ public class DialogoManager : MonoBehaviour
             }
         }
     }
+
+   
+
+
 }

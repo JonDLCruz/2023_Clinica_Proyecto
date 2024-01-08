@@ -3,11 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEditor.U2D;
 using UnityEngine;
 using UnityEngine.InputSystem.HID;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 using UnityEngine.Video;
+using Image = UnityEngine.UI.Image;
 
 public class PlayerController : MonoBehaviour
 {
@@ -27,8 +29,9 @@ public class PlayerController : MonoBehaviour
     private bool isTalking = false;
     //Menus Chat NPC
     public GameObject panelInfo;
-    public TextMeshProUGUI _subtitles, _interactInfo;
-    public GameObject _actividades, _panelSubtitles, _panelActividades;
+    public TextMeshProUGUI _subtitles, _interactInfo, _nombreNPC, _panelDialogo;
+    public GameObject _actividades, _panelSubtitles, _panelActividades, _DialogoUI;
+    public Image _faceset;
     //Menus Objetos
     public TextMeshProUGUI _tituloObj, _descObj, _nameObj;
     public VideoPlayer _vid;
@@ -40,7 +43,7 @@ public class PlayerController : MonoBehaviour
     //Rayos
     public float rayDistance;
     GameObject objInteract;
-    
+
     GameObject lastHit;
     //Listas
     List<InteractableObj> lista = new List<InteractableObj>();
@@ -68,6 +71,7 @@ public class PlayerController : MonoBehaviour
         _actividades.SetActive(false);
         _panelSubtitles.SetActive(false);
         _panelActividades.SetActive(false);
+        _DialogoUI.SetActive(false);
         panelInfo.SetActive(false);
         MenuObjeto.SetActive(false);
         //Permitimos Movimiento
@@ -127,14 +131,14 @@ public class PlayerController : MonoBehaviour
     {
         if (!isGrabing)
         {
-            
+
             RaycastObjectInteract();
         }
         else
         {
             StopGrabing(objInteract);
         }
-        
+
         RaycastNPC();
 
     }
@@ -242,14 +246,15 @@ public class PlayerController : MonoBehaviour
                 print("Detecatado");
                 panelInfo.SetActive(false);
                 StartDialog(hit.collider.gameObject.GetComponent<NPCText>());//Le pasamos a la funcion el NPCText del NPC por ahora ser un dialogo
-
+                                                                             // DialogueSpeaker ds = new DialogueSpeaker();
+                                                                             // ds.Conversar();
             }
         }
         else
         {
             panelInfo.SetActive(false);
         }
-       
+
     }
 
     public void RaycastObjectInteract()
@@ -357,34 +362,38 @@ public class PlayerController : MonoBehaviour
     }
     void StartDialog(NPCText _npc)
     {
-        
+
         //Esta funcion la utilizamo para leer el texto del NPC y mostrarlo por pantalla y Activar y desactivar los componentes que necesitamos
         print("Entro");
         isTalking = true;
         canMove = false;
         canMoveCamera = false;
         UnityEngine.Cursor.lockState = CursorLockMode.None;//Liberamos el raton para que el usuario pueda seleccionar las opciones que vamos a mostrar
-        dialogueText = _npc.presentacionNPC.lines;
+        dialogueText = _npc.arrayText;
         currentIndex = 0;
-        _actividades.SetActive(true);
-        _panelSubtitles.SetActive(true);
-        _subtitles.text = dialogueText[currentIndex];
+        // _actividades.SetActive(true);
+        //_panelSubtitles.SetActive(true);
+        //_subtitles.text = dialogueText[currentIndex];
+        _DialogoUI.SetActive(true);
+        _panelDialogo.text = dialogueText[currentIndex];
+        _faceset.sprite = _npc.personaje.imagen;
+        _nombreNPC.text = _npc.personaje.nombre;
+
         print("Termino");
     }
 
     void HandleDialog()
     {
         //Ponemos un timer al dialogo
-        dialogueTimer += Time.deltaTime;
-        if (dialogueTimer >= 5)
+        //dialogueTimer += Time.deltaTime;
+        if (Input.GetKeyDown(KeyCode.E) && isTalking == true)
         { //Cada 5 segundos salta a la siguiente linea
-
-            dialogueTimer = 0f;
+            //dialogueTimer = 0f;
             currentIndex++;//aumentamos la posiscion de la array para leer la siguiente linea
             if (currentIndex < dialogueText.Length)
             {
                 _subtitles.text = dialogueText[currentIndex];//Mostramos el dialogo
-                _panelActividades.SetActive(true);//Acticamos el panel de acticidades
+               // _panelActividades.SetActive(true);//Acticamos el panel de acticidades
             }
             else
             {
@@ -399,10 +408,11 @@ public class PlayerController : MonoBehaviour
         canMove = true;
         canMoveCamera = true;
         UnityEngine.Cursor.lockState = CursorLockMode.Locked;
-        _panelActividades.SetActive(false);
-        _panelSubtitles.SetActive(false);
-        _actividades.SetActive(false);
-        dialogueText = null;
+        // _panelActividades.SetActive(false);
+        //_panelSubtitles.SetActive(false);
+        //_actividades.SetActive(false);
+        _DialogoUI.SetActive(false);
+        _panelDialogo.text = null;
     }
 
     void ObjetosInteractuar(string _nombreObjeto)//Hit.Collider.gameObject.name
