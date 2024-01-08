@@ -1,6 +1,8 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.CompilerServices;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -43,9 +45,9 @@ public class PlayerController : MonoBehaviour
     //Rayos
     public float rayDistance;
     GameObject objInteract;
-    
+
     GameObject lastHit;
-    
+
     string nameDB = "", descr = "", path = "";
     bool shaderSwitch = false;
     bool rayCastObject = false;
@@ -63,6 +65,20 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
     bool grounded;
 
+    //Save Data
+    bool act01State = false;
+    bool act02State = false;
+    bool act03State = false;
+    int logrosObtenidos = 0;
+    int actividadesRealizadas = 0;
+    void setPlayerData()
+    {
+        act01State = DataSaveManager.LoadActivityState("Act01Key");
+        act02State = DataSaveManager.LoadActivityState("Act02Key");
+        act03State = DataSaveManager.LoadActivityState("Act03Key");
+        logrosObtenidos = DataSaveManager.LoadAchivements();
+        actividadesRealizadas = DataSaveManager.LoadAchivements(); 
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -76,7 +92,7 @@ public class PlayerController : MonoBehaviour
         //Cursor settings
         UnityEngine.Cursor.lockState = CursorLockMode.Locked;
         //Ocultamos Menu
-        
+
         _panelSubtitles.SetActive(false);
         _panelActividades.SetActive(false);
         panelInfo.SetActive(false);
@@ -109,7 +125,7 @@ public class PlayerController : MonoBehaviour
             HandleDialog();
         }
         PlayerStateMachine();
-        if(isGrabing&& Input.GetKeyDown(KeyCode.R))//Esto solo es para las animaciones de los objetos en mano
+        if (isGrabing && Input.GetKeyDown(KeyCode.R))//Esto solo es para las animaciones de los objetos en mano
         {
             //Metemos la animación del objeto
             ObjetosInteractuar(objInteract.name);
@@ -119,7 +135,7 @@ public class PlayerController : MonoBehaviour
     }
     void PlayAnim(string _path)
     {
-        AnimationClip clip = Resources.Load<AnimationClip>(_path); 
+        AnimationClip clip = Resources.Load<AnimationClip>(_path);
         if (clip != null)
         {
             Debug.LogError("No se pudo cargar la animación desde Resources: " + _path);
@@ -154,16 +170,16 @@ public class PlayerController : MonoBehaviour
     {
         if (!isGrabing)
         {
-            
+
             RaycastObjectInteract();
 
         }
         else
         {
-            
+
             StopGrabing(objInteract);
         }
-        
+
         RaycastNPC();
 
     }
@@ -207,11 +223,11 @@ public class PlayerController : MonoBehaviour
         }
         else if (grounded)
         {
-            
+
             pState = PlayerState.IDLE;
         }
     }
-   
+
     bool IsGrounded()
     {
         // Obtener la posición del objeto
@@ -290,7 +306,7 @@ public class PlayerController : MonoBehaviour
         {
             panelInfo.SetActive(false);
         }
-       
+
     }
 
     public void RaycastObjectInteract()
@@ -398,10 +414,10 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-   
+
     void StartDialog(NPCText _npc)
     {
-        
+
         //Esta funcion la utilizamo para leer el texto del NPC y mostrarlo por pantalla y Activar y desactivar los componentes que necesitamos
         print("Entro");
         isTalking = true;
@@ -410,7 +426,7 @@ public class PlayerController : MonoBehaviour
         UnityEngine.Cursor.lockState = CursorLockMode.None;//Liberamos el raton para que el usuario pueda seleccionar las opciones que vamos a mostrar
         dialogueText = _npc.arrayText;
         currentIndex = 0;
-       
+
         _panelSubtitles.SetActive(true);
         _subtitles.text = dialogueText[currentIndex];
         print("Termino");
@@ -450,11 +466,10 @@ public class PlayerController : MonoBehaviour
 
     void ObjetosInteractuar(string _nombreObjeto)//Hit.Collider.gameObject.name
     {
-        
+
         (nameDB, descr, path) = _GM.AccederObjetoLista(_nombreObjeto);//extraemos el nombre descr y Path de animacion
         print(nameDB);
         print(descr);
         print(path);
     }
-    
 }

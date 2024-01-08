@@ -12,8 +12,7 @@ public class GameManager : MonoBehaviour
     //Listas
     List<InteractableObj> lista = new List<InteractableObj>();
     public string path;
-    //ObjetoInteractable
-    private ObjInteractable db;
+  
     public ObjInteractable.Objeto Obj;
     public GameObject _menuOpciones,_menuGraficos,_menuGeneral;
     bool paused = false;
@@ -214,35 +213,7 @@ public class GameManager : MonoBehaviour
 
 
     }
-    public void CrearListadeScriptableObjets()
-    {
-        //Aqui metemos la lista de arriba bajo esta sentencia
-        //CrearDBScriptableObjects(string _name, string _desc, string _videoPath, string _animPath, string _photoPath);
-
-    }//Crea lisa de objetos
-    public void CrearDBScriptableObjects(string _name, string _desc, string _videoPath, string _animPath, string _photoPath)
-    {
-        for (int i = 0; i < db.objetosClinica.Length; i++)
-        {
-            if (db.objetosClinica[i].Name != null)
-            {
-                db.objetosClinica[i].Name = _name;
-                db.objetosClinica[i].Descr = _desc;
-                db.objetosClinica[i].VideoPath = _videoPath;
-                db.objetosClinica[i].AnimPath = _animPath;
-                db.objetosClinica[i].Photopath = _photoPath;
-            }
-        }
-    }
-    public void CargarDatosScriptableObjDB(int _id)
-    {
-        Obj.ID = _id;
-        Obj.Name = db.objetosClinica[_id].Name;
-        Obj.Descr = db.objetosClinica[_id].Descr;
-        Obj.VideoPath = db.objetosClinica[_id].VideoPath;
-        Obj.AnimPath = db.objetosClinica[_id].AnimPath;
-        Obj.Photopath = db.objetosClinica[_id].Photopath;
-    }
+   
     public (string, string, string) AccederObjetoLista(string _name)
     {
         InteractableObj objFind = lista.Find(objeto => objeto.name == _name);//Condicion para extraer el objeto con el nombre que le pasemos por parametro
@@ -254,49 +225,6 @@ public class GameManager : MonoBehaviour
         {
             throw new System.Exception("No ta");//ERROR: No encuentra objeto
         }
-    }
-
-    public void SaveData(int _id,string _user, string _pass, int _done, bool _ac1, bool _ac2, bool _ac3, bool _ac4, bool _ac5)
-    {
-        SaveData.DataSave saveData = new SaveData.DataSave();
-        saveData.id = _id;
-        saveData.user = _user;
-        saveData.password = _pass;
-        saveData.activityDone = _done;
-        saveData.activity_01 = _ac1; 
-        saveData.activity_02 = _ac2;
-        saveData.activity_03 = _ac3;
-        saveData.activity_04 = _ac4;
-        saveData.activity_05 = _ac5;
-
-        string save = JsonUtility.ToJson(saveData);
-        Debug.Log(path);
-        File.WriteAllText(path, save);
-    }
-    public SaveData.DataSave LoadData(int _id)
-    {
-        if(File.Exists(path))
-        {
-            string loadedData = File.ReadAllText(path);
-            SaveData.DataSave saveData = JsonUtility.FromJson<SaveData.DataSave>(loadedData);
-
-            if(saveData.id == _id)
-            {
-                Debug.Log("Data Load");
-                return saveData;
-            }
-            else
-            {
-                Debug.Log("Error 404: Id not Found");
-            }
-        }
-        else
-        {
-            Debug.Log("Error 404: Save not found");
-        }
-
-        return new SaveData.DataSave();
-
     }
     
     public void ExitApp()

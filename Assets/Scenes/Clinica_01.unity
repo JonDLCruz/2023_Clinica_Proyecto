@@ -8921,7 +8921,7 @@ MonoBehaviour:
   _interactInfo: {fileID: 688856996}
   _panelSubtitles: {fileID: 981349336}
   _panelActividades: {fileID: 315146004}
-  panelObjeto: {fileID: 0}
+  panelObjeto: {fileID: 435947783}
   _tituloObj: {fileID: 1263475463}
   _descObj: {fileID: 2027971501}
   _vid: {fileID: 0}
@@ -21283,7 +21283,7 @@ Transform:
   m_GameObject: {fileID: 1402246673}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.081, y: 1.45, z: 14.722}
+  m_LocalPosition: {x: -0.342, y: 1.41, z: 13.891}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -25731,6 +25731,7 @@ GameObject:
   - component: {fileID: 1551074262}
   - component: {fileID: 1551074264}
   - component: {fileID: 1551074265}
+  - component: {fileID: 1551074266}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -25794,6 +25795,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _AC: []
+--- !u!114 &1551074266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1551074261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ecd2316515e038a4c8fd7f7fac5bb84f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1551307325
 GameObject:
   m_ObjectHideFlags: 0
