@@ -57,7 +57,7 @@ public class PlayerController : MonoBehaviour
     private GameObject _mano;
     public bool isGrabing;
     public bool timeToReset;
-    //Animación
+    //Animaciï¿½n
     private Animator animator;
     //Callcular si esta en el suelo
     public float raycastDistance = 0.1f;
@@ -71,14 +71,14 @@ public class PlayerController : MonoBehaviour
     bool act03State = false;
     int logrosObtenidos = 0;
     int actividadesRealizadas = 0;
-    void setPlayerData()
-    {
-        act01State = DataSaveManager.LoadActivityState("Act01Key");
-        act02State = DataSaveManager.LoadActivityState("Act02Key");
-        act03State = DataSaveManager.LoadActivityState("Act03Key");
-        logrosObtenidos = DataSaveManager.LoadAchivements();
-        actividadesRealizadas = DataSaveManager.LoadAchivements(); 
-    }
+    //void setPlayerData()
+    //{
+    //    act01State = DataSaveManager.LoadActivityState("Act01Key");
+    //    act02State = DataSaveManager.LoadActivityState("Act02Key");
+    //    act03State = DataSaveManager.LoadActivityState("Act03Key");
+    //    logrosObtenidos = DataSaveManager.LoadAchivements();
+    //    actividadesRealizadas = DataSaveManager.LoadAchivements(); 
+    //}
     // Start is called before the first frame update
     void Start()
     {
@@ -127,7 +127,7 @@ public class PlayerController : MonoBehaviour
         PlayerStateMachine();
         if (isGrabing && Input.GetKeyDown(KeyCode.R))//Esto solo es para las animaciones de los objetos en mano
         {
-            //Metemos la animación del objeto
+            //Metemos la animaciï¿½n del objeto
             ObjetosInteractuar(objInteract.name);
             PlayAnim(path);
         }
@@ -138,7 +138,7 @@ public class PlayerController : MonoBehaviour
         AnimationClip clip = Resources.Load<AnimationClip>(_path);
         if (clip != null)
         {
-            Debug.LogError("No se pudo cargar la animación desde Resources: " + _path);
+            Debug.LogError("No se pudo cargar la animaciï¿½n desde Resources: " + _path);
             return;
         }
     }
@@ -230,10 +230,10 @@ public class PlayerController : MonoBehaviour
 
     bool IsGrounded()
     {
-        // Obtener la posición del objeto
+        // Obtener la posiciï¿½n del objeto
         Vector3 position = transform.position;
 
-        // Lanzar un rayo hacia abajo desde la posición del objeto
+        // Lanzar un rayo hacia abajo desde la posiciï¿½n del objeto
         bool hitGround = Physics.Raycast(position, Vector3.down, raycastDistance, groundLayer);
 
         return hitGround;
@@ -286,7 +286,7 @@ public class PlayerController : MonoBehaviour
     {
         //Dibujamos el rayo para verlo en play
         Debug.DrawRay(camera.position, camera.forward * rayDistance, Color.red);
-        //Creamos el hit donde sacaremos toda la insformación
+        //Creamos el hit donde sacaremos toda la insformaciï¿½n
         RaycastHit hit;
 
         if (Physics.Raycast(camera.position, camera.forward, out hit, rayDistance, LayerMask.GetMask("NPC_Checker")) && !isTalking)//casteamos el rayo desde camara y comprobamos los objetos en la mascara NPC_Checker
@@ -313,7 +313,7 @@ public class PlayerController : MonoBehaviour
     {
         //Dibujamos el rayo para verlo en play
         Debug.DrawRay(camera.position, camera.forward * rayDistance, Color.blue);
-        //Creamos el hit donde sacaremos toda la insformación
+        //Creamos el hit donde sacaremos toda la insformaciï¿½n
         RaycastHit hit;
 
         if (Physics.Raycast(camera.position, camera.forward, out hit, rayDistance, LayerMask.GetMask("OBJ_Checker")))//casteamos el rayo desde camara y comprobamos los objetos en la mascara NPC_Checker
@@ -393,7 +393,7 @@ public class PlayerController : MonoBehaviour
     {
         _obj.gameObject.GetComponent<Collider>().enabled = false;
         Debug.DrawRay(camera.position, camera.forward * rayDistance, Color.green);
-        //Creamos el hit donde sacaremos toda la insformación
+        //Creamos el hit donde sacaremos toda la insformaciï¿½n
         RaycastHit hit;
 
         if (Physics.Raycast(camera.position, camera.forward, out hit, rayDistance))//casteamos el rayo desde camara y comprobamos los objetos en la mascara NPC_Checker
