@@ -71,14 +71,16 @@ public class PlayerController : MonoBehaviour
     bool act03State = false;
     int logrosObtenidos = 0;
     int actividadesRealizadas = 0;
-    void setPlayerData()
-    {
+    /* void setPlayerData()
+    { 
         act01State = DataSaveManager.LoadActivityState("Act01Key");
         act02State = DataSaveManager.LoadActivityState("Act02Key");
         act03State = DataSaveManager.LoadActivityState("Act03Key");
         logrosObtenidos = DataSaveManager.LoadAchivements();
         actividadesRealizadas = DataSaveManager.LoadAchivements(); 
+        
     }
+    */
     // Start is called before the first frame update
     void Start()
     {

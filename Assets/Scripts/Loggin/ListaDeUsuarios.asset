@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e4544c9724ab09459c9c325a3e0b283, type: 3}
+  m_Name: ListaDeUsuarios
+  m_EditorClassIdentifier: 
+  registro:
+  - ID: 0
+    user: "pepe\u200B"
+    email: "pepe@medac\u200B"
+    password: "2222\u200B"
+    confiPass: 
+    newPlayer: 1
+    activityDone: 0
+    logros: 0
+    activity01: 0
+    activity02: 0
+    activity03: 0
+    activity04: 0
+    activity05: 0
