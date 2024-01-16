@@ -14,6 +14,7 @@ public class InicarAplicacion : MonoBehaviour
         StartCoroutine(IntercalarImagenes());
     }
 
+    //corrutina para intercalar imagenes
     IEnumerator IntercalarImagenes()
     {
         image.sprite = imagen1;
