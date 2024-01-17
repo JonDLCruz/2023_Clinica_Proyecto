@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.IO;
 using TMPro;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -102,6 +103,7 @@ public class GameManager : MonoBehaviour
     {
         //REFERENCIA A EL MANUAL WEB
     }
+
     //Metodos
     public void CrearListadeObjetos()//Crea lisa de objetos
     {
