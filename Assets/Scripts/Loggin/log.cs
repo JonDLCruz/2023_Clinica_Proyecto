@@ -19,7 +19,7 @@ public class LoginManager : MonoBehaviour
     public TMP_Text textuser;
     public TMP_Text textpassword;
     public TMP_Text mensajeError;
-    public TMP_Text userLogged; 
+    public TMP_Text userLogged;
     public string logUser;
     public string logPassword;
     public int logID;
@@ -49,7 +49,7 @@ public class LoginManager : MonoBehaviour
                 Debug.Log("encuentro al usuario");
                 userlogExist = true;
                 logID = registro.ID;
-                               if (logPassword == registro.password)
+                if (logPassword == registro.password)
                 {
                     Debug.Log("encuentra al pass");
                     passlogExist = true;
@@ -60,7 +60,8 @@ public class LoginManager : MonoBehaviour
                     passlogExist = false;
                 }
                 break;
-            } print("accedemos al siguiente usuario");
+            }
+            print("accedemos al siguiente usuario");
         }
         //si el usuario esta en la lista
         if (userlogExist && passlogExist)

@@ -8,7 +8,6 @@ namespace CityPeople
     {
         private AnimationClip[] myClips;
         private Animator animator;
-        public AnimationClip _Clip;
 
         void Start()
         {
